@@ -1,0 +1,49 @@
+# Dépendances
+/vendor
+/node_modules
+
+# Fichiers d'environnement
+.env
+.env.backup
+.env.production
+.env.*.local
+
+# Build & assets compilés
+/public/build
+/public/hot
+/public/storage
+
+# Fichiers générés
+/storage/*.key
+/storage/app/public/invoices/
+/storage/pail
+/bootstrap/cache/*.php
+
+# Logs & cache
+*.log
+.phpunit.result.cache
+/.phpunit.cache
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE & éditeurs
+/.idea
+/.vscode
+/.claude
+/.fleet
+/.nova
+/.zed
+.phpactor.json
+*.swp
+*.swo
+
+# Laravel
+/auth.json
+Homestead.json
+Homestead.yaml
+
+# Composer
+composer.phar
