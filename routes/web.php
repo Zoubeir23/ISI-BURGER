@@ -34,12 +34,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');
         Route::patch('orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
         Route::get('orders/{order}/invoice', [OrderController::class, 'downloadInvoice'])->name('orders.invoice.download');
+        Route::patch('orders/{order}/archive', [OrderController::class, 'archive'])->name('orders.archive');
+        Route::patch('orders/{order}/restore', [OrderController::class, 'restore'])->name('orders.restore');
+        Route::delete('orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
 
         // Payments
         Route::post('orders/{order}/payment', [PaymentController::class, 'store'])->name('orders.payment.store');
 
         // Burgers
         Route::resource('burgers', BurgerController::class);
+        Route::patch('burgers/{burger}/restore', [BurgerController::class, 'restore'])->name('burgers.restore');
 
         // Stocks
         Route::get('stocks', [StockController::class, 'index'])->name('stocks.index');

@@ -113,22 +113,71 @@
 
         {{-- Archiver --}}
         <div class="px-4 sm:px-6 pb-6">
-            <div class="border-t border-red-100 pt-4">
-                <form action="{{ route('admin.burgers.destroy', $burger) }}" method="POST"
-                    onsubmit="return confirm('Voulez-vous vraiment archiver ce burger ?');">
+            <div class="border-t border-red-100 pt-4 flex flex-wrap items-center gap-4">
+                <form id="archive-form" action="{{ route('admin.burgers.destroy', $burger) }}" method="POST">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="flex items-center gap-2 text-red-600 hover:text-red-800 text-sm font-medium transition">
-                        <span class="material-symbols-outlined text-base">archive</span>
-                        Archiver ce burger
-                    </button>
                 </form>
+                <button type="button" onclick="openArchiveModal()"
+                    class="flex items-center gap-2 text-orange-600 hover:text-orange-800 text-sm font-medium transition">
+                    <span class="material-symbols-outlined text-base">archive</span>
+                    Archiver ce burger
+                </button>
             </div>
         </div>
     </div>
 </div>
 
+{{-- Modale confirmation archive --}}
+<div id="archive-modal"
+     class="fixed inset-0 z-50 flex items-center justify-center p-4"
+     style="display:none!important; background:rgba(0,0,0,0.5); backdrop-filter:blur(4px);">
+    <div class="w-full max-w-sm rounded-2xl shadow-2xl p-6 flex flex-col gap-4"
+         style="background:var(--admin-card-bg,#fff); border:1px solid var(--admin-card-border,#e5e7eb);">
+        <div class="flex items-start gap-4">
+            <div class="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
+                 style="background:rgba(245,158,11,0.12);">
+                <span class="material-symbols-outlined" style="color:#f59e0b;font-size:1.375rem;font-variation-settings:'FILL' 1;">archive</span>
+            </div>
+            <div>
+                <p class="font-bold text-base" style="color:var(--admin-text,#111827);">Archiver ce burger&nbsp;?</p>
+                <p class="text-sm mt-1" style="color:var(--admin-text-muted,#6b7280);">
+                    Le burger sera masqué du kiosque mais restera dans la base. Vous pourrez le restaurer plus tard.
+                </p>
+            </div>
+        </div>
+        <div class="flex justify-end gap-3 pt-1">
+            <button type="button" onclick="closeArchiveModal()"
+                class="px-5 py-2.5 rounded-xl text-sm font-semibold border transition"
+                style="border-color:var(--admin-border,#e5e7eb);color:var(--admin-text-muted,#6b7280);"
+                onmouseover="this.style.background='var(--admin-content-bg,#f1f5f9)'"
+                onmouseout="this.style.background=''">
+                Annuler
+            </button>
+            <button type="button" onclick="document.getElementById('archive-form').submit()"
+                class="px-5 py-2.5 rounded-xl text-sm font-bold text-white transition shadow-lg"
+                style="background:#f59e0b;"
+                onmouseover="this.style.background='#d97706'"
+                onmouseout="this.style.background='#f59e0b'">
+                Oui, archiver
+            </button>
+        </div>
+    </div>
+</div>
+
 <script>
+function openArchiveModal() {
+    const m = document.getElementById('archive-modal');
+    m.style.removeProperty('display');
+    m.style.display = 'flex';
+}
+function closeArchiveModal() {
+    document.getElementById('archive-modal').style.display = 'none';
+}
+document.getElementById('archive-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeArchiveModal();
+});
+
 function previewImage(input) {
     const preview = document.getElementById('image-preview');
     const dropContent = document.getElementById('drop-content');

@@ -11,7 +11,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Authenticated users visiting guest-only pages (e.g. /admin/login) → go to dashboard
+        $middleware->redirectUsersTo('/admin/dashboard');
+        // Unauthenticated users visiting auth-protected pages → go to admin login
+        $middleware->redirectGuestsTo(fn () => route('admin.login'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

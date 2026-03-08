@@ -1,15 +1,15 @@
 @extends('layouts.admin')
-@section('title', 'Détail Commande #' . $order->id)
-@section('header', 'Détail Commande')
+@section('title', 'Commande ' . ($order->order_number ?? '#' . $order->id))
+@section('header', 'Commande ' . ($order->order_number ?? '#' . $order->id))
 
 @php
-$statusLabels = [
-    'pending'   => ['label' => 'En attente',    'class' => 'bg-orange-100 text-orange-800'],
-    'preparing' => ['label' => 'En préparation','class' => 'bg-yellow-100 text-yellow-800'],
-    'ready'     => ['label' => 'Prête',         'class' => 'bg-green-100 text-green-800'],
-    'paid'      => ['label' => 'Payée',         'class' => 'bg-blue-100 text-blue-800'],
-    'delivered' => ['label' => 'Livrée',        'class' => 'bg-purple-100 text-purple-800'],
-    'cancelled' => ['label' => 'Annulée',       'class' => 'bg-red-100 text-red-800'],
+$statusConfig = [
+    'pending'   => ['label' => 'En attente',    'dot' => '#f59e0b', 'bg' => 'rgba(245,158,11,0.1)',  'text' => '#d97706'],
+    'preparing' => ['label' => 'En préparation','dot' => '#3b82f6', 'bg' => 'rgba(59,130,246,0.1)',  'text' => '#2563eb'],
+    'ready'     => ['label' => 'Prête',         'dot' => '#22c55e', 'bg' => 'rgba(34,197,94,0.1)',   'text' => '#16a34a'],
+    'paid'      => ['label' => 'Payée',         'dot' => '#8b5cf6', 'bg' => 'rgba(139,92,246,0.1)',  'text' => '#7c3aed'],
+    'delivered' => ['label' => 'Livrée',        'dot' => '#06b6d4', 'bg' => 'rgba(6,182,212,0.1)',   'text' => '#0891b2'],
+    'cancelled' => ['label' => 'Annulée',       'dot' => '#ef4444', 'bg' => 'rgba(239,68,68,0.1)',   'text' => '#dc2626'],
 ];
 $statusOptions = [
     'pending'   => 'En attente',
@@ -19,7 +19,7 @@ $statusOptions = [
     'delivered' => 'Livrée',
     'cancelled' => 'Annulée',
 ];
-$badge = $statusLabels[$order->status] ?? ['label' => $order->status, 'class' => 'bg-gray-100 text-gray-800'];
+$badge = $statusConfig[$order->status] ?? ['label' => $order->status, 'dot' => '#9ca3af', 'bg' => 'rgba(156,163,175,0.1)', 'text' => '#6b7280'];
 @endphp
 
 @section('content')
@@ -35,7 +35,9 @@ $badge = $statusLabels[$order->status] ?? ['label' => $order->status, 'class' =>
     <div class="flex-1 bg-white rounded-xl border border-gray-200 p-6">
         <div class="flex items-center justify-between mb-4">
             <h3 class="text-lg font-bold text-slate-900">Articles de la commande</h3>
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium {{ $badge['class'] }}">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold"
+                  style="background: {{ $badge['bg'] }}; color: {{ $badge['text'] }};">
+                <span style="width:6px;height:6px;border-radius:50%;background:{{ $badge['dot'] }};display:inline-block;flex-shrink:0;"></span>
                 {{ $badge['label'] }}
             </span>
         </div>
@@ -45,7 +47,9 @@ $badge = $statusLabels[$order->status] ?? ['label' => $order->status, 'class' =>
                 <div class="flex gap-4">
                     <span class="font-bold text-gray-500">{{ $item->quantity }}x</span>
                     <div>
-                        <p class="font-medium text-slate-900">{{ $item->burger->name }}</p>
+                        <p class="font-medium text-slate-900">
+                            {{ $item->burger?->name ?? '(Burger supprimé)' }}
+                        </p>
                         <p class="text-sm text-gray-500">{{ number_format($item->unit_price, 0, ',', ' ') }} FCFA / u</p>
                     </div>
                 </div>
@@ -82,10 +86,13 @@ $badge = $statusLabels[$order->status] ?? ['label' => $order->status, 'class' =>
         <div class="bg-white rounded-xl border border-gray-200 p-6">
             <h3 class="font-bold text-slate-900 mb-4">Modifier le statut</h3>
             @if($order->status !== 'cancelled')
-            <form action="{{ route('admin.orders.updateStatus', $order) }}" method="POST">
+            <form id="status-update-form" action="{{ route('admin.orders.updateStatus', $order) }}" method="POST">
                 @csrf
                 @method('PATCH')
-                <select name="status" class="w-full rounded-lg border-gray-300 mb-4" onchange="this.form.submit()">
+                <input type="hidden" name="status" id="status-hidden-input" value="{{ $order->status }}">
+                <select id="status-select" class="w-full rounded-lg mb-4"
+                        style="background: var(--admin-card-bg, #fff); border: 1px solid var(--admin-border, #e5e7eb); color: var(--admin-text, #111827); padding: 8px 12px; font-size: 0.875rem;"
+                        onchange="handleStatusChange(this)">
                     @foreach($statusOptions as $value => $label)
                     <option value="{{ $value }}" {{ $order->status === $value ? 'selected' : '' }}>
                         {{ $label }}
@@ -93,6 +100,57 @@ $badge = $statusLabels[$order->status] ?? ['label' => $order->status, 'class' =>
                     @endforeach
                 </select>
             </form>
+
+            {{-- Modale confirmation changement vers "Annulée" via select --}}
+            <div id="status-cancel-modal"
+                 class="fixed inset-0 z-50 flex items-center justify-center p-4"
+                 style="display:none; background:rgba(0,0,0,0.5); backdrop-filter:blur(4px);">
+                <div class="w-full max-w-sm rounded-2xl shadow-2xl p-6 flex flex-col gap-4"
+                     style="background:var(--admin-card-bg,#fff); border:1px solid var(--admin-card-border,#e5e7eb);">
+                    <div class="flex items-start gap-4">
+                        <div class="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
+                             style="background:rgba(239,68,68,0.12);">
+                            <span class="material-symbols-outlined" style="color:#ef4444;font-size:1.375rem;font-variation-settings:'FILL' 1;">cancel</span>
+                        </div>
+                        <div>
+                            <p class="font-bold text-base" style="color:var(--admin-text,#111827);">Annuler la commande&nbsp;?</p>
+                            <p class="text-sm mt-1" style="color:var(--admin-text-muted,#6b7280);">Le stock des articles sera restitué automatiquement. Cette action est irréversible.</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-end gap-3 pt-1">
+                        <button type="button" onclick="closeStatusCancelModal()"
+                            class="px-5 py-2.5 rounded-xl text-sm font-semibold border transition cursor-pointer"
+                            style="border-color:var(--admin-border,#e5e7eb);color:var(--admin-text-muted,#6b7280);"
+                            onmouseover="this.style.background='var(--admin-content-bg,#f1f5f9)'" onmouseout="this.style.background=''">Retour</button>
+                        <button type="button" onclick="confirmStatusCancel()"
+                            class="px-5 py-2.5 rounded-xl text-sm font-bold text-white transition shadow-lg cursor-pointer"
+                            style="background:#ef4444;" onmouseover="this.style.background='#dc2626'" onmouseout="this.style.background='#ef4444'">
+                            Oui, annuler
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <script>
+            function handleStatusChange(select) {
+                if (select.value === 'cancelled') {
+                    document.getElementById('status-cancel-modal').style.display = 'flex';
+                } else {
+                    document.getElementById('status-hidden-input').value = select.value;
+                    document.getElementById('status-update-form').submit();
+                }
+            }
+            function closeStatusCancelModal() {
+                document.getElementById('status-cancel-modal').style.display = 'none';
+                document.getElementById('status-select').value = '{{ $order->status }}';
+            }
+            function confirmStatusCancel() {
+                document.getElementById('status-hidden-input').value = 'cancelled';
+                document.getElementById('status-update-form').submit();
+            }
+            document.getElementById('status-cancel-modal').addEventListener('click', function(e) {
+                if (e.target === this) closeStatusCancelModal();
+            });
+            </script>
             @endif
 
             @if($order->status === 'ready' || ($order->status === 'paid' && $order->invoice_number))
@@ -127,19 +185,54 @@ $badge = $statusLabels[$order->status] ?? ['label' => $order->status, 'class' =>
             <h3 class="font-bold text-red-700 mb-3">Annuler la commande</h3>
             <p class="text-sm text-gray-500 mb-4">Cette action restituera le stock des articles et ne peut pas être annulée.</p>
             <form action="{{ route('admin.orders.updateStatus', $order) }}" method="POST"
-                  onsubmit="return confirm('Êtes-vous sûr de vouloir annuler cette commande ?');">
+                      id="cancel-order-form">
                 @csrf
                 @method('PATCH')
                 <input type="hidden" name="status" value="cancelled">
-                <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
+                <button type="button" onclick="document.getElementById('cancel-order-modal').style.display='flex'"
+                    class="w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
                     <span class="material-symbols-outlined text-[18px]">cancel</span>
                     Annuler la commande
                 </button>
             </form>
+
+            {{-- Modale confirmation annulation --}}
+            <div id="cancel-order-modal"
+                 class="fixed inset-0 z-50 flex items-center justify-center p-4"
+                 style="display:none; background:rgba(0,0,0,0.5); backdrop-filter:blur(4px);">
+                <div class="w-full max-w-sm rounded-2xl shadow-2xl p-6 flex flex-col gap-4"
+                     style="background:var(--admin-card-bg,#fff); border:1px solid var(--admin-card-border,#e5e7eb);">
+                    <div class="flex items-start gap-4">
+                        <div class="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
+                             style="background:rgba(239,68,68,0.12);">
+                            <span class="material-symbols-outlined" style="color:#ef4444;font-size:1.375rem;font-variation-settings:'FILL' 1;">cancel</span>
+                        </div>
+                        <div>
+                            <p class="font-bold text-base" style="color:var(--admin-text,#111827);">Annuler la commande&nbsp;?</p>
+                            <p class="text-sm mt-1" style="color:var(--admin-text-muted,#6b7280);">Le stock des articles sera restitué automatiquement. Cette action est irréversible.</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-end gap-3 pt-1">
+                        <button type="button" onclick="document.getElementById('cancel-order-modal').style.display='none'"
+                            class="px-5 py-2.5 rounded-xl text-sm font-semibold border transition"
+                            style="border-color:var(--admin-border,#e5e7eb);color:var(--admin-text-muted,#6b7280);"
+                            onmouseover="this.style.background='var(--admin-content-bg,#f1f5f9)'" onmouseout="this.style.background=''">Retour</button>
+                        <button type="button" onclick="document.getElementById('cancel-order-form').submit()"
+                            class="px-5 py-2.5 rounded-xl text-sm font-bold text-white transition shadow-lg"
+                            style="background:#ef4444;" onmouseover="this.style.background='#dc2626'" onmouseout="this.style.background='#ef4444'">
+                            Oui, annuler
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <script>
+            document.getElementById('cancel-order-modal').addEventListener('click', function(e) {
+                if (e.target === this) this.style.display = 'none';
+            });
+            </script>
         </div>
         @endif
 
-        <!-- Paiement -->
         @if(!$order->payment && $order->status !== 'cancelled')
         <div class="bg-white rounded-xl border border-gray-200 p-6">
             <h3 class="font-bold text-slate-900 mb-4">Enregistrer le paiement</h3>
@@ -151,9 +244,9 @@ $badge = $statusLabels[$order->status] ?? ['label' => $order->status, 'class' =>
                 </div>
                 @endif
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Montant reçu (Espèces)</label>
+                    <label class="block text-sm font-medium mb-1" style="color: var(--admin-text, #111827);">Montant reçu (Espèces)</label>
                     <input type="number" name="amount" value="{{ $order->total_amount }}"
-                           class="w-full rounded-lg border-gray-300 focus:border-primary focus:ring-primary"
+                           style="width:100%; padding: 9px 12px; border-radius: 8px; border: 1px solid var(--admin-border, #e5e7eb); background: var(--admin-card-bg, #fff); color: var(--admin-text, #111827); font-size: 0.875rem;"
                            step="1" min="0">
                 </div>
                 <input type="hidden" name="payment_method" value="cash">
@@ -179,4 +272,61 @@ $badge = $statusLabels[$order->status] ?? ['label' => $order->status, 'class' =>
         @endif
     </div>
 </div>
+
+{{-- Bouton archiver (si état terminal) --}}
+@php $archivable = in_array($order->status, ['delivered', 'paid', 'cancelled']); @endphp
+@if(!$order->is_archived)
+<div class="mt-6">
+    <form id="archive-order-form" action="{{ route('admin.orders.archive', $order) }}" method="POST">
+        @csrf @method('PATCH')
+    </form>
+    <button type="button" onclick="openArchiveOrderModal()"
+        class="flex items-center gap-2 text-sm font-medium transition {{ $archivable ? 'text-orange-600 hover:text-orange-800' : 'text-gray-400 cursor-not-allowed' }}"
+        {{ !$archivable ? 'disabled title="Seules les commandes livrées, payées ou annulées peuvent être archivées."' : '' }}>
+        <span class="material-symbols-outlined text-base">archive</span>
+        Archiver cette commande
+    </button>
+</div>
+
+@if($archivable)
+<div id="archive-order-modal"
+     class="fixed inset-0 z-50 flex items-center justify-center p-4"
+     style="display:none; background:rgba(0,0,0,0.5); backdrop-filter:blur(4px);">
+    <div class="w-full max-w-sm rounded-2xl shadow-2xl p-6 flex flex-col gap-4"
+         style="background:var(--admin-card-bg,#fff); border:1px solid var(--admin-card-border,#e5e7eb);">
+        <div class="flex items-start gap-4">
+            <div class="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
+                 style="background:rgba(245,158,11,0.12);">
+                <span class="material-symbols-outlined" style="color:#f59e0b;font-size:1.375rem;font-variation-settings:'FILL' 1;">archive</span>
+            </div>
+            <div>
+                <p class="font-bold text-base" style="color:var(--admin-text,#111827);">Archiver cette commande&nbsp;?</p>
+                <p class="text-sm mt-1" style="color:var(--admin-text-muted,#6b7280);">
+                    La commande sera masquée de la liste principale mais conservée dans l’historique. Vous pourrez la restaurer ou la supprimer depuis l’onglet Archivées.
+                </p>
+            </div>
+        </div>
+        <div class="flex justify-end gap-3 pt-1">
+            <button type="button" onclick="document.getElementById('archive-order-modal').style.display='none'"
+                class="px-5 py-2.5 rounded-xl text-sm font-semibold border transition"
+                style="border-color:var(--admin-border,#e5e7eb);color:var(--admin-text-muted,#6b7280);"
+                onmouseover="this.style.background='var(--admin-content-bg,#f1f5f9)'" onmouseout="this.style.background=''">Annuler</button>
+            <button type="button" onclick="document.getElementById('archive-order-form').submit()"
+                class="px-5 py-2.5 rounded-xl text-sm font-bold text-white transition shadow-lg"
+                style="background:#f59e0b;" onmouseover="this.style.background='#d97706'" onmouseout="this.style.background='#f59e0b'">
+                Oui, archiver
+            </button>
+        </div>
+    </div>
+</div>
+<script>
+function openArchiveOrderModal() {
+    document.getElementById('archive-order-modal').style.display = 'flex';
+}
+document.getElementById('archive-order-modal').addEventListener('click', function(e) {
+    if (e.target === this) this.style.display = 'none';
+});
+</script>
+@endif
+@endif
 @endsection

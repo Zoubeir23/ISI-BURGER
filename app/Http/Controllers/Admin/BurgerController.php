@@ -9,10 +9,23 @@ use Illuminate\Support\Facades\Storage;
 
 class BurgerController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $burgers = Burger::orderBy('name')->paginate(10);
-        return view('admin.burgers.index', compact('burgers'));
+        $filter = $request->query('filter', 'active');
+
+        $query = Burger::orderBy('name');
+
+        if ($filter === 'archived') {
+            $query->where('is_archived', true);
+        } else {
+            $query->where('is_archived', false);
+        }
+
+        $burgers = $query->paginate(10)->appends(['filter' => $filter]);
+        $activeCount = Burger::where('is_archived', false)->count();
+        $archivedCount = Burger::where('is_archived', true)->count();
+
+        return view('admin.burgers.index', compact('burgers', 'filter', 'activeCount', 'archivedCount'));
     }
 
     public function create()
@@ -91,7 +104,35 @@ class BurgerController extends Controller
 
     public function destroy(Burger $burger)
     {
+        if ($burger->is_archived) {
+            $finalStatuses = ['delivered', 'paid', 'cancelled'];
+
+            // Commandes actives qui référencent ce burger
+            $activeItems = $burger->orderItems()
+                ->whereHas('order', fn($q) => $q->whereNotIn('status', $finalStatuses))
+                ->exists();
+
+            if ($activeItems) {
+                return redirect()
+                    ->route('admin.burgers.index', ['filter' => 'archived'])
+                    ->with('error', 'Impossible de supprimer « ' . $burger->name . ' » : des commandes en cours le référencent encore. Attendez qu\'elles soient livrées ou annulées.');
+            }
+
+            // Nullifier les références dans les commandes terminées pour préserver l'historique
+            $burger->orderItems()->update(['burger_id' => null]);
+
+            $burger->delete();
+            return redirect()->route('admin.burgers.index', ['filter' => 'archived'])->with('success', 'Burger supprimé définitivement.');
+        }
+
+        // Sinon, archiver
         $burger->update(['is_archived' => true]);
         return redirect()->route('admin.burgers.index')->with('success', 'Burger archivé.');
+    }
+
+    public function restore(Burger $burger)
+    {
+        $burger->update(['is_archived' => false]);
+        return redirect()->route('admin.burgers.index')->with('success', 'Burger restauré.');
     }
 }

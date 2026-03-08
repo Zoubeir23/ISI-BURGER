@@ -45,12 +45,20 @@
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <h3 class="font-bold text-slate-900 mb-4">Commandes par Mois</h3>
+        <h3 class="font-bold text-slate-900 mb-1">Commandes par Mois</h3>
+        <p class="text-xs text-gray-400 mb-4">Année {{ date('Y') }}</p>
         <canvas id="ordersChart"></canvas>
     </div>
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <h3 class="font-bold text-slate-900 mb-4">Ventes par Catégorie</h3>
-        <canvas id="salesChart"></canvas>
+        <h3 class="font-bold text-slate-900 mb-1">Ventes par Catégorie &amp; par Mois</h3>
+        <p class="text-xs text-gray-400 mb-4">Quantités vendues par mois, groupées par catégorie</p>
+        @if($allCategories->isEmpty())
+            <div class="flex items-center justify-center h-48 text-gray-400 text-sm">
+                Aucune donnée de catégorie disponible.
+            </div>
+        @else
+            <canvas id="salesChart"></canvas>
+        @endif
     </div>
 </div>
 
@@ -80,32 +88,97 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const ordersCtx = document.getElementById('ordersChart').getContext('2d');
-    new Chart(ordersCtx, {
-        type: 'bar',
-        data: {
-            labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'],
-            datasets: [{
-                label: 'Commandes',
-                data: @json($ordersData),
-                backgroundColor: '#f2240d',
-                borderRadius: 4
-            }]
-        },
-        options: { responsive: true }
-    });
+    const MONTHS  = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
+    const PALETTE = ['#ff6b35', '#10B981', '#F59E0B', '#3B82F6', '#8B5CF6', '#EC4899', '#14B8A6', '#F97316'];
 
-    const salesCtx = document.getElementById('salesChart').getContext('2d');
-    new Chart(salesCtx, {
-        type: 'doughnut',
-        data: {
-            labels: @json($categories),
-            datasets: [{
-                data: @json($salesData),
-                backgroundColor: ['#f2240d', '#10B981', '#F59E0B', '#3B82F6', '#6366F1'],
-            }]
-        },
-        options: { responsive: true }
-    });
+    function isDarkMode() {
+        return document.getElementById('html-root').classList.contains('dark-mode');
+    }
+    function chartColors() {
+        const dark = isDarkMode();
+        return {
+            grid:      dark ? 'rgba(255,255,255,0.06)' : '#e5e7eb',
+            tickColor: dark ? '#64748b' : '#9ca3af',
+            legendColor: dark ? '#94a3b8' : '#6b7280',
+        };
+    }
+
+    function buildOrdersChart() {
+        const { grid, tickColor } = chartColors();
+        return new Chart(document.getElementById('ordersChart').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: MONTHS,
+                datasets: [{
+                    label: 'Commandes',
+                    data: @json($ordersData),
+                    backgroundColor: 'rgba(255,107,53,0.85)',
+                    borderRadius: 5,
+                    borderSkipped: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { stepSize: 1, color: tickColor }, grid: { color: grid } },
+                    x: { ticks: { color: tickColor }, grid: { display: false } }
+                }
+            }
+        });
+    }
+
+    @if($allCategories->isNotEmpty())
+    function buildSalesChart() {
+        const { grid, tickColor, legendColor } = chartColors();
+        const categoryData = @json($monthlyCategoryData);
+        const categories   = @json($allCategories);
+
+        const salesDatasets = categories.map((cat, i) => ({
+            label: cat,
+            data: categoryData[cat] || Array(12).fill(0),
+            backgroundColor: PALETTE[i % PALETTE.length],
+            borderRadius: 4,
+            borderSkipped: false,
+        }));
+
+        return new Chart(document.getElementById('salesChart').getContext('2d'), {
+            type: 'bar',
+            data: { labels: MONTHS, datasets: salesDatasets },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { boxWidth: 12, padding: 16, font: { size: 11 }, color: legendColor }
+                    }
+                },
+                scales: {
+                    y: { beginAtZero: true, ticks: { stepSize: 1, color: tickColor }, grid: { color: grid } },
+                    x: { ticks: { color: tickColor }, grid: { display: false } }
+                }
+            }
+        });
+    }
+    @endif
+
+    let ordersChartInstance = buildOrdersChart();
+    @if($allCategories->isNotEmpty())
+    let salesChartInstance  = buildSalesChart();
+    @endif
+
+    // Reconstruire les charts lors du changement de thème
+    const _origToggle = window.toggleAdminTheme;
+    window.toggleAdminTheme = function() {
+        if (typeof _origToggle === 'function') _origToggle();
+        setTimeout(() => {
+            ordersChartInstance.destroy();
+            ordersChartInstance = buildOrdersChart();
+            @if($allCategories->isNotEmpty())
+            salesChartInstance.destroy();
+            salesChartInstance = buildSalesChart();
+            @endif
+        }, 50);
+    };
 </script>
 @endsection
