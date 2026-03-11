@@ -59,8 +59,8 @@
     html.light .form-input::placeholder { color: #9ca3af; }
     .form-input:focus {
         outline: none;
-        border-color: #ff6b35;
-        box-shadow: 0 0 0 3px rgba(255,107,53,0.18);
+        border-color: #e53e3e;
+        box-shadow: 0 0 0 3px rgba(229,62,62,0.18);
     }
 
     /* Qty controls */
@@ -76,13 +76,13 @@
         flex-shrink: 0;
     }
     html.light .qty-btn { background: #f3f4f6; border-color: #e5e7eb; color: #111827; }
-    .qty-btn:hover { background: #ff6b35; border-color: #ff6b35; color: white; }
+    .qty-btn:hover { background: #e53e3e; border-color: #e53e3e; color: white; }
 
     /* Submit button */
     .btn-confirm {
         width: 100%;
         height: 56px;
-        background: linear-gradient(135deg, #ff6b35 0%, #e55a26 100%);
+        background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
         color: white;
         font-family: 'Karla', sans-serif;
         font-weight: 800;
@@ -92,10 +92,10 @@
         border: none;
         cursor: pointer;
         display: flex; align-items: center; justify-content: center; gap: 8px;
-        box-shadow: 0 6px 24px rgba(255,107,53,0.38);
+        box-shadow: 0 6px 24px rgba(229,62,62,0.38);
         transition: transform 0.15s, box-shadow 0.2s, filter 0.2s;
     }
-    .btn-confirm:hover  { filter: brightness(1.07); box-shadow: 0 8px 32px rgba(255,107,53,0.5); }
+    .btn-confirm:hover  { filter: brightness(1.07); box-shadow: 0 8px 32px rgba(229,62,62,0.5); }
     .btn-confirm:active { transform: scale(0.98); }
     .btn-confirm:disabled { background: var(--surface-2); color: var(--text-dim); box-shadow: none; cursor: not-allowed; filter: none; }
 
@@ -128,7 +128,7 @@
     <div class="flex-1 flex flex-col gap-4 min-w-0">
         <div class="flex items-center gap-3 mb-2">
             <h2 class="text-2xl font-black tracking-tight" style="color: var(--text);">Mon panier</h2>
-            <span id="cart-count-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold text-white" style="background: #ff6b35;"></span>
+            <span id="cart-count-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold text-white" style="background: #e53e3e;"></span>
         </div>
 
         <div id="cart-items-container" class="space-y-4">
@@ -140,7 +140,7 @@
                     <p class="font-bold text-lg" style="color: var(--text-muted);">Votre panier est vide</p>
                     <p class="text-sm mt-1" style="color: var(--text-dim);">Retournez au catalogue pour commander</p>
                 </div>
-                <a href="{{ route('kiosk.index', [], false) }}" class="flex items-center gap-2 font-bold text-sm px-5 py-2.5 rounded-full text-white transition-all" style="background: #ff6b35; box-shadow: 0 4px 14px rgba(255,107,53,0.35);">
+                <a href="{{ route('kiosk.index', [], false) }}" class="flex items-center gap-2 font-bold text-sm px-5 py-2.5 rounded-full text-white transition-all" style="background: #e53e3e; box-shadow: 0 4px 14px rgba(229,62,62,0.35);">
                     <span class="material-symbols-outlined text-[18px]">arrow_back</span>
                     Voir le catalogue
                 </a>
@@ -156,7 +156,7 @@
             <h3 class="font-bold text-sm uppercase tracking-widest mb-4" style="color: var(--text-muted);">Récapitulatif</h3>
             <div class="flex items-end justify-between summary-divider pt-4">
                 <span class="font-semibold" style="color: var(--text-muted);">Total à payer</span>
-                <span class="price-tag text-3xl" style="color: #ff6b35;" id="checkout-total">0 FCFA</span>
+                <span class="price-tag text-3xl" style="color: #e53e3e;" id="checkout-total">0 FCFA</span>
             </div>
         </div>
 
@@ -167,7 +167,7 @@
 
                 <div>
                     <label class="form-label" for="client_name">
-                        <span class="material-symbols-outlined text-[14px] align-middle" style="color:#ff6b35;">person</span>
+                        <span class="material-symbols-outlined text-[14px] align-middle" style="color:#e53e3e;">person</span>
                         Nom complet
                     </label>
                     <input class="form-input" id="client_name" name="client_name" type="text" required placeholder="Ex: Moussa Diop"/>
@@ -175,7 +175,7 @@
 
                 <div>
                     <label class="form-label" for="client_phone">
-                        <span class="material-symbols-outlined text-[14px] align-middle" style="color:#ff6b35;">phone</span>
+                        <span class="material-symbols-outlined text-[14px] align-middle" style="color:#e53e3e;">phone</span>
                         Téléphone
                     </label>
                     <input class="form-input" id="client_phone" name="client_phone" type="tel" required placeholder="Ex: 77 000 00 00"/>
@@ -183,7 +183,7 @@
 
                 <div>
                     <label class="form-label" for="client_email">
-                        <span class="material-symbols-outlined text-[14px] align-middle" style="color:#ff6b35;">mail</span>
+                        <span class="material-symbols-outlined text-[14px] align-middle" style="color:#e53e3e;">mail</span>
                         Email <span style="font-weight:400; text-transform:none; letter-spacing:0; color: var(--text-dim); font-size:10px;">(optionnel — reçu)</span>
                     </label>
                     <input class="form-input" id="client_email" name="client_email" type="email" placeholder="Ex: moussa@email.com"/>
@@ -200,7 +200,7 @@
 
         <!-- Back link -->
         <a href="{{ route('kiosk.index', [], false) }}" class="flex items-center justify-center gap-2 text-sm font-semibold py-2 rounded-xl transition-colors cursor-pointer" style="color: var(--text-muted);"
-           onmouseover="this.style.color='#ff6b35';" onmouseout="this.style.color='';">
+           onmouseover="this.style.color='#e53e3e';" onmouseout="this.style.color='';">
             <span class="material-symbols-outlined text-[18px]">arrow_back</span>
             Continuer mes achats
         </a>
@@ -257,7 +257,7 @@
                         <p class="font-bold text-lg" style="color: var(--text-muted);">Votre panier est vide</p>
                         <p class="text-sm mt-1" style="color: var(--text-dim);">Retournez au catalogue pour commander</p>
                     </div>
-                    <a href="{{ route('kiosk.index', [], false) }}" class="flex items-center gap-2 font-bold text-sm px-5 py-2.5 rounded-full text-white transition-all" style="background: #ff6b35; box-shadow: 0 4px 14px rgba(255,107,53,0.35);">
+                    <a href="{{ route('kiosk.index', [], false) }}" class="flex items-center gap-2 font-bold text-sm px-5 py-2.5 rounded-full text-white transition-all" style="background: #e53e3e; box-shadow: 0 4px 14px rgba(229,62,62,0.35);">
                         <span class="material-symbols-outlined text-[18px]">arrow_back</span>
                         Voir le catalogue
                     </a>
@@ -294,7 +294,7 @@
                 <div class="flex flex-col flex-1 gap-2 min-w-0">
                     <div class="flex justify-between items-start gap-2">
                         <h3 style="font-weight:800;font-size:0.95rem;color:var(--text);line-height:1.2;"></h3>
-                        <span style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.1rem;color:#ff6b35;white-space:nowrap;">
+                        <span style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.1rem;color:#e53e3e;white-space:nowrap;">
                             ${new Intl.NumberFormat('fr-FR').format(sub)} F
                         </span>
                     </div>

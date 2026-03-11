@@ -31,8 +31,8 @@
         theme: {
           extend: {
             colors: {
-              "primary":      "#ff6b35",
-              "primary-dark": "#e55a26",
+              "primary":      "#e53e3e",
+              "primary-dark": "#c53030",
               "secondary":    "#1f2937",
               "success":      "#22c55e",
               "danger":       "#ef4444",
@@ -71,10 +71,9 @@
             --pill-inactive:#1c2333;
             --pill-text:    #9ca3af;
             --pill-border:  rgba(255,255,255,0.1);
-            --price-color:  #ff6b35;
-            --accent:       #ff6b35;
-            --accent-dark:  #e55a26;
-            --gradient-card: linear-gradient(to top, rgba(15,17,23,0.98) 0%, rgba(15,17,23,0.5) 50%, transparent 100%);
+            --price-color:  #e53e3e;
+            --accent:       #e53e3e;
+            --accent-dark:  #c53030;
         }
 
         /* ── Palette : light ── */
@@ -95,10 +94,9 @@
             --pill-inactive:#f3f4f6;
             --pill-text:    #6b7280;
             --pill-border:  #e5e7eb;
-            --price-color:  #ff6b35;
-            --accent:       #ff6b35;
-            --accent-dark:  #e55a26;
-            --gradient-card: linear-gradient(to top, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.4) 55%, transparent 100%);
+            --price-color:  #e53e3e;
+            --accent:       #e53e3e;
+            --accent-dark:  #c53030;
         }
 
         * { box-sizing: border-box; }
@@ -122,7 +120,7 @@
 
         /* Brand */
         .brand-isi    { font-family: 'Playfair Display SC', serif; font-weight: 700; letter-spacing: 0.05em; }
-        .brand-burger { font-family: 'Playfair Display SC', serif; font-weight: 700; color: #ff6b35; letter-spacing: 0.05em; }
+        .brand-burger { font-family: 'Playfair Display SC', serif; font-weight: 700; color: #e53e3e; letter-spacing: 0.05em; }
 
         /* Header */
         .site-header {
@@ -133,11 +131,11 @@
             transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
-        /* Orange glow line under header */
+        /* Red glow line under header */
         .header-glow {
-            background: linear-gradient(90deg, transparent 0%, #ff6b35 30%, #ffb347 50%, #ff6b35 70%, transparent 100%);
+            background: linear-gradient(90deg, transparent 0%, #e53e3e 30%, #fc8181 50%, #e53e3e 70%, transparent 100%);
             height: 1.5px;
-            opacity: 0.5;
+            opacity: 0.45;
         }
 
         /* Theme toggle */
@@ -152,10 +150,9 @@
             transition: all 0.2s ease;
             flex-shrink: 0;
         }
-        .theme-toggle:hover { border-color: #ff6b35; color: #ff6b35; }
+        .theme-toggle:hover { border-color: #e53e3e; color: #e53e3e; }
 
         /* ── Override global Tailwind forms CDN — dark mode ── */
-        /* Le plugin forms de Tailwind écrase tous les inputs. On force le thème sombre par défaut */
         html:not(.light) input,
         html:not(.light) input[type="text"],
         html:not(.light) input[type="search"],
@@ -198,7 +195,6 @@
         }
         html.light input::placeholder { color: #9ca3af !important; }
 
-        /* Light mode overrides — kiosk specifics */
         html.light .burger-card-kiosk { box-shadow: 0 2px 16px rgba(0,0,0,0.08); }
 
         @media (prefers-reduced-motion: reduce) {
@@ -212,7 +208,8 @@
     <div class="px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between max-w-7xl mx-auto gap-3">
         <!-- Logo -->
         <a href="{{ route('kiosk.index', [], false) }}" class="flex items-center gap-2.5 sm:gap-3 flex-shrink-0 group cursor-pointer">
-            <div class="size-9 sm:size-11 rounded-xl flex items-center justify-center text-white transition-colors duration-200 shadow-lg" style="background-color: #ff6b35; group-hover:background-color: #e55a26; box-shadow: 0 4px 14px rgba(255,107,53,0.35);">
+            <div class="size-9 sm:size-11 rounded-xl flex items-center justify-center text-white transition-all duration-200 shadow-lg group-hover:scale-105"
+                 style="background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%); box-shadow: 0 4px 14px rgba(229,62,62,0.4);">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 sm:w-6 h-5 sm:h-6" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M20 10.5V9c0-3.87-3.13-7-7-7S6 5.13 6 9v1.5C4.84 10.5 4 11.34 4 12.5V19c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-6.5c0-1.16-.84-2-2-2zM12 4c2.76 0 5 2.24 5 5H7c0-2.76 2.24-5 5-5zm2 11.5h-4v-2c0-.55.45-1 1-1h2c.55 0 1 .45 1 1v2z"/>
                 </svg>

@@ -89,7 +89,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const MONTHS  = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
-    const PALETTE = ['#ff6b35', '#10B981', '#F59E0B', '#3B82F6', '#8B5CF6', '#EC4899', '#14B8A6', '#F97316'];
+    const PALETTE = ['#e53e3e', '#10B981', '#F59E0B', '#3B82F6', '#8B5CF6', '#EC4899', '#14B8A6', '#F97316'];
 
     function isDarkMode() {
         return document.getElementById('html-root').classList.contains('dark-mode');
@@ -112,7 +112,7 @@
                 datasets: [{
                     label: 'Commandes',
                     data: @json($ordersData),
-                    backgroundColor: 'rgba(255,107,53,0.85)',
+                    backgroundColor: 'rgba(229,62,62,0.85)',
                     borderRadius: 5,
                     borderSkipped: false,
                 }]

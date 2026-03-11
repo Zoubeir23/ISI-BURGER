@@ -19,7 +19,7 @@ class OrderDelivered extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Commande livrée — Merci ! | ISI BURGER',
+            subject: 'Commande ' . ($this->order->order_number ?? '#' . $this->order->id) . ' livrée — Merci ! | ISI BURGER',
         );
     }
 

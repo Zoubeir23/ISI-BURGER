@@ -20,7 +20,7 @@ class OrderReady extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Votre commande #' . $this->order->id . ' est prête ! — ISI BURGER',
+            subject: 'Votre commande ' . ($this->order->order_number ?? '#' . $this->order->id) . ' est prête ! — ISI BURGER',
         );
     }
 

@@ -11,7 +11,7 @@
         * { box-sizing: border-box; }
         body { font-family: 'Karla', sans-serif; margin: 0; }
         .brand-isi    { font-family: 'Playfair Display SC', serif; font-weight: 700; }
-        .brand-burger { font-family: 'Playfair Display SC', serif; font-weight: 700; color: #ff6b35; }
+        .brand-burger { font-family: 'Playfair Display SC', serif; font-weight: 700; color: #e53e3e; }
 
         .bg-pattern {
             background-color: #0e0e0e;
@@ -38,7 +38,7 @@
         }
 
         .accent-line {
-            background: linear-gradient(90deg, transparent, #ff6b35, #E67E22, #ff6b35, transparent);
+            background: linear-gradient(90deg, transparent, #e53e3e, #E67E22, #e53e3e, transparent);
             height: 1.5px;
             opacity: 0.4;
             margin: 0 28px;
@@ -81,7 +81,7 @@
         .dark-input[type="email"]:focus,
         .dark-input[type="password"]:focus {
             background-color: rgba(191,58,43,0.08) !important;
-            border-color: #ff6b35 !important;
+            border-color: #e53e3e !important;
             box-shadow: 0 0 0 3px rgba(191,58,43,0.15) !important;
         }
         .dark-input::placeholder { color: rgba(255,255,255,0.2) !important; }
@@ -117,7 +117,7 @@
 
         .btn-login {
             width: 100%;
-            background: #ff6b35;
+            background: #e53e3e;
             color: #fff;
             font-family: 'Karla', sans-serif;
             font-weight: 700;
@@ -132,7 +132,7 @@
             transition: background 0.2s, transform 0.12s, box-shadow 0.2s;
             margin-top: 6px;
         }
-        .btn-login:hover  { background: #e55a26; box-shadow: 0 6px 26px rgba(191,58,43,0.5); }
+        .btn-login:hover  { background: #c53030; box-shadow: 0 6px 26px rgba(191,58,43,0.5); }
         .btn-login:active { transform: scale(0.982); }
 
         .error-box {
@@ -168,7 +168,7 @@
 
         <!-- En-tête marque -->
         <div style="padding:32px 32px 22px;text-align:center;">
-            <div style="display:inline-flex;align-items:center;justify-content:center;width:54px;height:54px;background:#ff6b35;border-radius:14px;margin-bottom:18px;box-shadow:0 8px 24px rgba(191,58,43,0.32);">
+            <div style="display:inline-flex;align-items:center;justify-content:center;width:54px;height:54px;background:#e53e3e;border-radius:14px;margin-bottom:18px;box-shadow:0 8px 24px rgba(191,58,43,0.32);">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" style="width:26px;height:26px;">
                     <path d="M20 10.5V9c0-3.87-3.13-7-7-7S6 5.13 6 9v1.5C4.84 10.5 4 11.34 4 12.5V19c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-6.5c0-1.16-.84-2-2-2zM12 4c2.76 0 5 2.24 5 5H7c0-2.76 2.24-5 5-5zm2 11.5h-4v-2c0-.55.45-1 1-1h2c.55 0 1 .45 1 1v2z"/>
                 </svg>
@@ -186,7 +186,7 @@
 
             @if ($errors->any())
             <div class="error-box">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#ff6b35" style="width:17px;height:17px;flex-shrink:0;margin-top:1px;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#e53e3e" style="width:17px;height:17px;flex-shrink:0;margin-top:1px;">
                     <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
                 </svg>
                 <ul>@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>

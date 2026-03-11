@@ -27,8 +27,8 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary":      "#ff6b35",
-                        "primary-dark": "#e55a26",
+                        "primary":      "#e53e3e",
+                        "primary-dark": "#c53030",
                         "secondary":    "#1f2937",
                         "success":      "#22c55e",
                         "warning":      "#f59e0b",
@@ -50,8 +50,8 @@
 
         /* ── Variables light (default) ── */
         :root {
-            --admin-accent:       #ff6b35;
-            --admin-accent-dark:  #e55a26;
+            --admin-accent:       #e53e3e;
+            --admin-accent-dark:  #c53030;
             --admin-bg:           #f9fafb;
             --admin-content-bg:   #f1f5f9;
             --admin-header-bg:    #ffffff;
@@ -80,8 +80,8 @@
 
         /* ── Variables dark ── */
         html.dark-mode {
-            --admin-accent:       #ff6b35;
-            --admin-accent-dark:  #e55a26;
+            --admin-accent:       #e53e3e;
+            --admin-accent-dark:  #c53030;
             --admin-bg:           #0d0d0d;
             --admin-content-bg:   #0f1117;
             --admin-header-bg:    #161b27;
@@ -189,8 +189,8 @@
         html.dark-mode input:focus,
         html.dark-mode select:focus,
         html.dark-mode textarea:focus {
-            border-color: #ff6b35 !important;
-            box-shadow: 0 0 0 2px rgba(255,107,53,0.2) !important;
+            border-color: #e53e3e !important;
+            box-shadow: 0 0 0 2px rgba(229,62,62,0.2) !important;
         }
 
         /* ── Dark mode — table rows ── */
@@ -207,7 +207,7 @@
         html.dark-mode .border-t-4 { /* keep accent colors unchanged */ }
 
         /* ── Dark mode — badge icons bg ── */
-        html.dark-mode .bg-primary\/10 { background-color: rgba(255,107,53,0.15) !important; }
+        html.dark-mode .bg-primary\/10 { background-color: rgba(229,62,62,0.15) !important; }
         html.dark-mode .bg-success\/10 { background-color: rgba(34,197,94,0.15) !important; }
         html.dark-mode .bg-warning\/10 { background-color: rgba(245,158,11,0.15) !important; }
         html.dark-mode .bg-red-50      { background-color: rgba(239,68,68,0.1) !important; }
@@ -232,8 +232,8 @@
             color: #9ca3af;
         }
         .admin-theme-toggle:hover {
-            border-color: #ff6b35;
-            color: #ff6b35;
+            border-color: #e53e3e;
+            color: #e53e3e;
         }
 
         /* ── Toast notifications ── */
@@ -339,13 +339,13 @@
     <aside id="sidebar" class="flex w-[260px] flex-col h-full flex-shrink-0 lg:static lg:translate-x-0" style="background: var(--sidebar-bg); border-right: 1px solid var(--sidebar-border);">
         <div class="flex h-16 lg:h-20 items-center px-6" style="background: var(--sidebar-bg); border-bottom: 1px solid var(--sidebar-border);">
             <!-- Orange burger icon -->
-            <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 mr-3" style="background: #ff6b35; box-shadow: 0 4px 14px rgba(255,107,53,0.4);">
+            <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 mr-3" style="background: #e53e3e; box-shadow: 0 4px 14px rgba(229,62,62,0.4);">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" style="width:18px;height:18px;">
                     <path d="M20 10.5V9c0-3.87-3.13-7-7-7S6 5.13 6 9v1.5C4.84 10.5 4 11.34 4 12.5V19c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-6.5c0-1.16-.84-2-2-2zM12 4c2.76 0 5 2.24 5 5H7c0-2.76 2.24-5 5-5zm2 11.5h-4v-2c0-.55.45-1 1-1h2c.55 0 1 .45 1 1v2z"/>
                 </svg>
             </div>
             <div>
-                <h1 class="text-lg font-bold tracking-tight leading-none" style="color: var(--sidebar-title);">ISI <span style="color:#ff6b35;">BURGER</span></h1>
+                <h1 class="text-lg font-bold tracking-tight leading-none" style="color: var(--sidebar-title);">ISI <span style="color:#e53e3e;">BURGER</span></h1>
                 <p class="text-[10px] font-semibold mt-0.5 uppercase tracking-widest" style="color: var(--sidebar-nav-text);">Admin Console</p>
             </div>
             <!-- Close button mobile -->
@@ -372,13 +372,13 @@
             @php $isActive = request()->routeIs($item['route']); @endphp
             <a href="{{ route($navRoutes[$item['route']]) }}"
                class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group"
-               style="{{ $isActive ? 'background: rgba(255,107,53,0.15); color: #ff6b35;' : 'color: #6b7280;' }}"
+               style="{{ $isActive ? 'background: rgba(229,62,62,0.15); color: #e53e3e;' : 'color: #6b7280;' }}"
                onmouseover="if(!{{ $isActive ? 'true' : 'false' }}) sidebarHover(this, true);"
                onmouseout="if(!{{ $isActive ? 'true' : 'false' }}) sidebarHover(this, false);">
-                <span class="material-symbols-outlined text-[20px]" style="{{ $isActive ? 'color:#ff6b35;' : '' }}">{{ $item['icon'] }}</span>
+                <span class="material-symbols-outlined text-[20px]" style="{{ $isActive ? 'color:#e53e3e;' : '' }}">{{ $item['icon'] }}</span>
                 <span class="text-sm font-semibold">{{ $item['label'] }}</span>
                 @if($isActive)
-                <div class="ml-auto w-1.5 h-1.5 rounded-full" style="background:#ff6b35;"></div>
+                <div class="ml-auto w-1.5 h-1.5 rounded-full" style="background:#e53e3e;"></div>
                 @endif
             </a>
             @endforeach
@@ -400,7 +400,7 @@
             <div class="flex items-center gap-3 p-2.5 rounded-xl cursor-pointer"
                  onmouseover="this.style.background=getComputedStyle(document.documentElement).getPropertyValue('--sidebar-user-hover').trim();"
                  onmouseout="this.style.background='';">
-                <div class="h-9 w-9 rounded-full flex items-center justify-center flex-shrink-0" style="background: rgba(255,107,53,0.2); color: #ff6b35;">
+                <div class="h-9 w-9 rounded-full flex items-center justify-center flex-shrink-0" style="background: rgba(229,62,62,0.2); color: #e53e3e;">
                     <span class="material-symbols-outlined text-xl">person</span>
                 </div>
                 <div class="flex flex-col overflow-hidden">

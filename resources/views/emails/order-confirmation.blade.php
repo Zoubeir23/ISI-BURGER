@@ -1,235 +1,163 @@
-{{-- Template email : Confirmation de commande — Dark Premium --}}
+{{-- Email: Confirmation de commande — ISI BURGER --}}
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="x-apple-disable-message-reformatting">
     <title>Confirmation de commande — ISI BURGER</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap');
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #0f0d0a; color: #1a1a1a;
-            line-height: 1.5; -webkit-font-smoothing: antialiased;
-        }
-        /* ── Layout ── */
-        .outer { background: #0f0d0a; padding: 40px 20px; }
-        .card {
-            max-width: 580px; margin: 0 auto; background: #fff;
-            border-radius: 20px; overflow: hidden;
-            box-shadow: 0 32px 80px rgba(0,0,0,.7), 0 8px 24px rgba(0,0,0,.5);
-        }
-        /* ── Header ── */
-        .hdr { background: #0f0d0a; padding: 26px 36px; }
-        .hdr-inner { display: flex; justify-content: space-between; align-items: center; }
-        .hdr-logo {
-            font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif;
-            font-size: 24px; font-weight: 900; color: #fff;
-            letter-spacing: 1.5px; text-transform: uppercase;
-        }
-        .hdr-logo span { color: #ff6b35; }
-        .hdr-badge {
-            font-size: 9px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase;
-            color: rgba(255,255,255,.28); border: 1px solid rgba(255,255,255,.1);
-            padding: 4px 11px; border-radius: 100px;
-        }
-        /* ── Stripe ── */
-        .stripe { height: 5px; background: linear-gradient(90deg, #a82d08 0%, #ff6b35 55%, #ffb08a 100%); }
-        /* ── Hero (dark) ── */
-        .hero {
-            background: #0f0d0a;
-            padding: 44px 40px 40px; text-align: center;
-        }
-        .hero-chip {
-            display: inline-block; margin-bottom: 26px;
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
-            color: #ff6b35; border: 1px solid rgba(255,107,53,.35);
-            padding: 5px 14px; border-radius: 100px; background: rgba(255,107,53,.08);
-        }
-        .hero-icon {
-            width: 80px; height: 80px; margin: 0 auto 22px;
-            background: linear-gradient(145deg, #ff6b35, #a82d08);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 20px 60px rgba(255,107,53,.4), 0 4px 16px rgba(255,107,53,.2);
-        }
-        .hero-icon svg { width: 38px; height: 38px; }
-        .hero-title {
-            font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif;
-            font-size: 44px; font-weight: 900; color: #fff;
-            text-transform: uppercase; letter-spacing: 1px; line-height: 1.05;
-            margin-bottom: 12px;
-        }
-        .hero-sub { font-size: 15px; color: rgba(255,255,255,.5); line-height: 1.65; }
-        .hero-sub strong { color: rgba(255,255,255,.85); }
-        /* ── Order number ticket ── */
-        .ticket {
-            display: inline-block; margin-top: 28px;
-            background: rgba(255,107,53,.08); border: 1px solid rgba(255,107,53,.25);
-            border-radius: 12px; padding: 14px 28px;
-        }
-        .ticket-label {
-            font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
-            color: rgba(255,107,53,.55); margin-bottom: 5px;
-        }
-        .ticket-number {
-            font-family: 'Barlow Condensed', monospace;
-            font-size: 22px; font-weight: 800; color: #ff6b35; letter-spacing: .5px;
-        }
-        /* ── Body ── */
-        .section { padding: 32px 36px; background: #fff; }
-        .section + .section { padding-top: 0; }
-        .sec-label {
-            font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
-            color: #d0c8c4; padding-bottom: 12px; margin-bottom: 4px;
-            border-bottom: 1px solid #f0ece9;
-        }
-        /* ── Items ── */
-        .item-row {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 0; border-bottom: 1px solid #f5f2f0;
-        }
-        .item-row:last-child { border-bottom: none; }
-        .item-name { font-size: 14px; font-weight: 600; color: #1a1a1a; }
-        .item-meta { font-size: 11px; color: #b5aeaa; margin-top: 2px; }
-        .item-price { font-size: 14px; font-weight: 700; color: #ff6b35; white-space: nowrap; padding-left: 16px; }
-        /* ── Total ── */
-        .total-bar {
-            background: #0f0d0a; border-radius: 14px;
-            padding: 18px 24px; display: flex; justify-content: space-between; align-items: center;
-            margin-top: 18px;
-        }
-        .total-lbl {
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 13px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
-            color: rgba(255,255,255,.32);
-        }
-        .total-amt {
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 30px; font-weight: 900; color: #ff6b35;
-        }
-        /* ── Notice ── */
-        .notice {
-            margin-top: 20px; background: #fff8f5;
-            border: 1px solid rgba(255,107,53,.18); border-left: 4px solid #ff6b35;
-            border-radius: 12px; padding: 16px 20px;
-        }
-        .notice p { font-size: 13px; color: #7a3a20; line-height: 1.75; }
-        .notice p strong { color: #c2340a; }
-        /* ── Meta rows ── */
-        .meta-row {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 0; border-bottom: 1px solid #f5f2f0;
-        }
-        .meta-row:last-child { border-bottom: none; }
-        .meta-k { font-size: 12px; color: #c0b8b4; font-weight: 500; }
-        .meta-v { font-size: 13px; color: #1a1a1a; font-weight: 600; }
-        .meta-v.accent { color: #ff6b35; }
-        /* ── Footer ── */
-        .footer { background: #0f0d0a; padding: 28px 36px; text-align: center; }
-        .footer-logo {
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 22px; font-weight: 900; color: #fff;
-            letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px;
-        }
-        .footer-logo span { color: #ff6b35; }
-        .footer-tagline { font-size: 12px; color: rgba(255,255,255,.22); margin-bottom: 16px; }
-        .footer-sep { border: none; border-top: 1px solid rgba(255,255,255,.07); margin-bottom: 16px; }
-        .footer-legal { font-size: 11px; color: rgba(255,255,255,.18); line-height: 1.7; }
-        @media (max-width: 600px) {
-            .outer { padding: 12px 8px; }
-            .hdr, .hero, .section, .footer { padding-left: 22px !important; padding-right: 22px !important; }
-            .hero-title { font-size: 34px; }
-            .total-amt { font-size: 24px; }
+    <style type="text/css">
+        body, table, td { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+        table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+        body { margin: 0 !important; padding: 0 !important; }
+        @media screen and (max-width: 600px) {
+            .email-wrap  { width: 100% !important; }
+            .mob-pad     { padding: 24px 20px !important; }
+            .mob-hero    { padding: 32px 20px 28px !important; }
+            .hero-title  { font-size: 30px !important; }
+            .ticket-num  { font-size: 15px !important; letter-spacing: 1px !important; }
+            .total-amt   { font-size: 24px !important; }
         }
     </style>
 </head>
-<body>
-<div class="outer">
-<div class="card">
+<body style="margin:0;padding:0;background-color:#0d0908;font-family:Arial,Helvetica,sans-serif;">
 
-    <!-- Header -->
-    <div class="hdr">
-        <div class="hdr-inner">
-            <div class="hdr-logo">ISI <span>BURGER</span></div>
-            <div class="hdr-badge">Confirmation commande</div>
-        </div>
-    </div>
-    <div class="stripe"></div>
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="#0d0908" style="background-color:#0d0908;">
+<tr><td align="center" style="padding:36px 12px 40px;">
 
-    <!-- Hero -->
-    <div class="hero">
-        <div class="hero-chip">Nouvelle commande</div>
-        <div class="hero-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12"/>
-            </svg>
-        </div>
-        <div class="hero-title">Commande<br>confirmée !</div>
-        <div class="hero-sub">Bonjour <strong>{{ $order->client_name }}</strong>,<br>votre commande a bien été enregistrée.</div>
-        <div class="ticket">
-            <div class="ticket-label">N° Commande</div>
-            <div class="ticket-number">{{ $order->order_number ?? '#' . $order->id }}</div>
-        </div>
-    </div>
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" class="email-wrap" style="width:100%;max-width:600px;background-color:#ffffff;">
 
-    <!-- Items -->
-    <div class="section">
-        <div class="sec-label">Récapitulatif de la commande</div>
+  <!-- TOP BAR -->
+  <tr>
+    <td height="6" bgcolor="#e53e3e" style="background:linear-gradient(90deg,#991b1b 0%,#e53e3e 55%,#fca5a5 100%);background-color:#e53e3e;height:6px;font-size:1px;line-height:1px;">&nbsp;</td>
+  </tr>
+
+  <!-- HEADER -->
+  <tr>
+    <td bgcolor="#111111" style="background-color:#111111;padding:20px 36px;" class="mob-pad">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
+        <td valign="middle">
+          <span style="font-family:'Arial Black',Arial,sans-serif;font-size:20px;font-weight:900;color:#fff;letter-spacing:2.5px;text-transform:uppercase;line-height:1;">ISI&nbsp;<span style="color:#e53e3e;">BURGER</span></span>
+        </td>
+        <td align="right" valign="middle">
+          <span style="font-family:Arial,sans-serif;font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.28);border:1px solid rgba(255,255,255,.1);padding:4px 11px;">CONFIRMATION</span>
+        </td>
+      </tr></table>
+    </td>
+  </tr>
+
+  <!-- HERO -->
+  <tr>
+    <td bgcolor="#111111" style="background-color:#111111;padding:44px 36px 40px;text-align:center;" class="mob-hero">
+      <div style="display:inline-block;font-family:Arial,sans-serif;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#e53e3e;border:1px solid rgba(229,62,62,.38);padding:5px 16px;border-radius:100px;background-color:rgba(229,62,62,.1);margin-bottom:26px;">NOUVELLE COMMANDE</div><br>
+
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:0 auto 22px;">
+        <tr>
+          <td width="76" height="76" bgcolor="#e53e3e" style="width:76px;height:76px;border-radius:50%;background-color:#e53e3e;text-align:center;vertical-align:middle;font-size:34px;color:#fff;font-weight:900;line-height:76px;">&#10003;</td>
+        </tr>
+      </table>
+
+      <div class="hero-title" style="font-family:'Arial Black',Arial,sans-serif;font-size:38px;font-weight:900;color:#fff;text-transform:uppercase;letter-spacing:-0.5px;line-height:1.05;margin-bottom:14px;">Commande<br>Confirm&eacute;e&nbsp;!</div>
+      <p style="margin:0 auto 28px;max-width:400px;font-family:Arial,sans-serif;font-size:15px;color:rgba(255,255,255,.5);line-height:1.7;">Bonjour <strong style="color:rgba(255,255,255,.85);">{{ $order->client_name }}</strong>,<br>votre commande a bien &eacute;t&eacute; enregistr&eacute;e.</p>
+
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:0 auto;">
+        <tr>
+          <td bgcolor="#1d1510" style="background-color:#1d1510;border:1px solid rgba(229,62,62,.32);border-radius:10px;padding:15px 34px;text-align:center;">
+            <div style="font-family:Arial,sans-serif;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(229,62,62,.55);margin-bottom:7px;">N&deg; COMMANDE</div>
+            <div class="ticket-num" style="font-family:'Courier New',Courier,monospace;font-size:19px;font-weight:700;color:#e53e3e;letter-spacing:2.5px;">{{ $order->order_number ?? '#'.$order->id }}</div>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- ITEMS -->
+  <tr>
+    <td bgcolor="#ffffff" style="background-color:#fff;padding:32px 36px 0;" class="mob-pad">
+      <div style="font-family:Arial,sans-serif;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#c0b8b4;padding-bottom:12px;border-bottom:2px solid #f0ece8;margin-bottom:2px;">R&Eacute;CAPITULATIF DE COMMANDE</div>
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
         @foreach($order->orderItems as $item)
-        <div class="item-row">
-            <div>
-                <div class="item-name">{{ $item->burger->name }}</div>
-                <div class="item-meta">× {{ $item->quantity }} &nbsp;·&nbsp; {{ number_format($item->unit_price, 0, ',', ' ') }} FCFA/u</div>
-            </div>
-            <div class="item-price">{{ number_format($item->unit_price * $item->quantity, 0, ',', ' ') }} F</div>
-        </div>
+        <tr>
+          <td style="padding:13px 0;border-bottom:1px solid #f5f1ef;vertical-align:top;">
+            <div style="font-family:Arial,sans-serif;font-size:14px;font-weight:700;color:#1a1a1a;">{{ $item->burger->name }}</div>
+            <div style="font-family:Arial,sans-serif;font-size:11px;color:#afa8a4;margin-top:3px;">&times;&nbsp;{{ $item->quantity }}&nbsp;&nbsp;&bull;&nbsp;&nbsp;{{ number_format($item->unit_price, 0, ',', ' ') }}&nbsp;FCFA/u</div>
+          </td>
+          <td align="right" valign="top" style="padding:13px 0 13px 14px;border-bottom:1px solid #f5f1ef;white-space:nowrap;">
+            <span style="font-family:Arial,sans-serif;font-size:14px;font-weight:700;color:#e53e3e;">{{ number_format($item->unit_price * $item->quantity, 0, ',', ' ') }}&nbsp;F</span>
+          </td>
+        </tr>
         @endforeach
-        <div class="total-bar">
-            <span class="total-lbl">Total à payer</span>
-            <span class="total-amt">{{ number_format($order->total_amount, 0, ',', ' ') }} F</span>
-        </div>
-    </div>
+      </table>
+      <!-- Total bar -->
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:18px;">
+        <tr>
+          <td bgcolor="#111111" style="background-color:#111111;border-radius:10px;padding:17px 22px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
+              <td valign="middle"><span style="font-family:Arial,sans-serif;font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.3);">TOTAL &Agrave; PAYER</span></td>
+              <td align="right" valign="middle"><span class="total-amt" style="font-family:'Arial Black',Arial,sans-serif;font-size:28px;font-weight:900;color:#e53e3e;">{{ number_format($order->total_amount, 0, ',', ' ') }}&nbsp;F</span></td>
+            </tr></table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
 
-    <!-- Notice -->
-    <div class="section" style="padding-top:0;">
-        <div class="notice">
-            <p>💳 <strong>Règlement au comptoir.</strong> Veuillez vous présenter à la caisse pour effectuer votre paiement. Une facture vous sera remise dès que votre commande sera prête.</p>
-        </div>
-    </div>
+  <!-- NOTICE -->
+  <tr>
+    <td bgcolor="#ffffff" style="background-color:#fff;padding:18px 36px 0;" class="mob-pad">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tr>
+          <td bgcolor="#fff8f5" style="background-color:#fff8f5;border-left:4px solid #e53e3e;border-radius:8px;padding:14px 18px;">
+            <p style="margin:0;font-family:Arial,sans-serif;font-size:13px;color:#7a3a20;line-height:1.75;">&#128179;&nbsp;<strong style="color:#991b1b;">R&egrave;glement au comptoir.</strong> Pr&eacute;sentez-vous &agrave; la caisse pour effectuer votre paiement. Une facture vous sera remise d&egrave;s que votre commande sera pr&ecirc;te.</p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
 
-    <!-- Meta -->
-    <div class="section" style="padding-top:0;">
-        <div class="sec-label">Vos informations</div>
-        <div class="meta-row">
-            <span class="meta-k">Nom</span>
-            <span class="meta-v">{{ $order->client_name }}</span>
-        </div>
-        <div class="meta-row">
-            <span class="meta-k">Téléphone</span>
-            <span class="meta-v">{{ $order->client_phone }}</span>
-        </div>
-        <div class="meta-row">
-            <span class="meta-k">Date</span>
-            <span class="meta-v">{{ $order->created_at->format('d/m/Y à H:i') }}</span>
-        </div>
-        <div class="meta-row">
-            <span class="meta-k">Statut</span>
-            <span class="meta-v accent">En attente de préparation</span>
-        </div>
-    </div>
+  <!-- META -->
+  <tr>
+    <td bgcolor="#ffffff" style="background-color:#fff;padding:28px 36px;" class="mob-pad">
+      <div style="font-family:Arial,sans-serif;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#c0b8b4;padding-bottom:12px;border-bottom:2px solid #f0ece8;margin-bottom:2px;">VOS INFORMATIONS</div>
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tr>
+          <td style="padding:11px 0;border-bottom:1px solid #f5f1ef;"><span style="font-family:Arial,sans-serif;font-size:12px;color:#b0a8a4;">Nom</span></td>
+          <td align="right" style="padding:11px 0;border-bottom:1px solid #f5f1ef;"><span style="font-family:Arial,sans-serif;font-size:13px;font-weight:700;color:#1a1a1a;">{{ $order->client_name }}</span></td>
+        </tr>
+        <tr>
+          <td style="padding:11px 0;border-bottom:1px solid #f5f1ef;"><span style="font-family:Arial,sans-serif;font-size:12px;color:#b0a8a4;">T&eacute;l&eacute;phone</span></td>
+          <td align="right" style="padding:11px 0;border-bottom:1px solid #f5f1ef;"><span style="font-family:Arial,sans-serif;font-size:13px;font-weight:700;color:#1a1a1a;">{{ $order->client_phone }}</span></td>
+        </tr>
+        <tr>
+          <td style="padding:11px 0;border-bottom:1px solid #f5f1ef;"><span style="font-family:Arial,sans-serif;font-size:12px;color:#b0a8a4;">Date</span></td>
+          <td align="right" style="padding:11px 0;border-bottom:1px solid #f5f1ef;"><span style="font-family:Arial,sans-serif;font-size:13px;font-weight:700;color:#1a1a1a;">{{ $order->created_at->format('d/m/Y à H:i') }}</span></td>
+        </tr>
+        <tr>
+          <td style="padding:11px 0;"><span style="font-family:Arial,sans-serif;font-size:12px;color:#b0a8a4;">Statut</span></td>
+          <td align="right" style="padding:11px 0;"><span style="font-family:Arial,sans-serif;font-size:13px;font-weight:700;color:#e53e3e;">En attente de pr&eacute;paration</span></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
 
-    <!-- Footer -->
-    <div class="footer">
-        <div class="footer-logo">ISI <span>BURGER</span></div>
-        <div class="footer-tagline">Restaurant · Kiosk · Commandes</div>
-        <div class="footer-sep"></div>
-        <div class="footer-legal">Cet email a été envoyé automatiquement &middot; ISI BURGER &copy; {{ date('Y') }}<br>Merci de ne pas répondre à cet email.</div>
-    </div>
+  <!-- FOOTER -->
+  <tr>
+    <td bgcolor="#111111" style="background-color:#111111;padding:28px 36px;text-align:center;" class="mob-pad">
+      <div style="font-family:'Arial Black',Arial,sans-serif;font-size:18px;font-weight:900;color:#fff;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:5px;">ISI&nbsp;<span style="color:#e53e3e;">BURGER</span></div>
+      <div style="font-family:Arial,sans-serif;font-size:11px;color:rgba(255,255,255,.2);margin-bottom:18px;">Restaurant &middot; Kiosque &middot; Commandes</div>
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"><tr><td height="1" style="border-top:1px solid rgba(255,255,255,.07);font-size:1px;line-height:1px;padding-bottom:18px;"></td></tr></table>
+      <p style="margin:0;font-family:Arial,sans-serif;font-size:10px;color:rgba(255,255,255,.18);line-height:1.8;">Cet email a &eacute;t&eacute; envoy&eacute; automatiquement &middot; ISI BURGER &copy; {{ date('Y') }}<br>Merci de ne pas r&eacute;pondre &agrave; cet email.</p>
+    </td>
+  </tr>
 
-</div>
-</div>
+  <!-- BOTTOM BAR -->
+  <tr>
+    <td height="4" bgcolor="#e53e3e" style="background:linear-gradient(90deg,#991b1b 0%,#e53e3e 55%,#fca5a5 100%);background-color:#e53e3e;height:4px;font-size:1px;line-height:1px;">&nbsp;</td>
+  </tr>
+
+</table>
+</td></tr>
+</table>
 </body>
 </html>
