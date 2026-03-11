@@ -28,6 +28,29 @@ class KioskController extends Controller
         return view('kiosk.confirmation');
     }
 
+    public function orderStatus(int $id)
+    {
+        if (session('last_order_id') != $id) {
+            abort(403);
+        }
+
+        $order = Order::findOrFail($id);
+
+        $labels = [
+            'pending'   => 'En attente',
+            'preparing' => 'En préparation',
+            'ready'     => 'Prête',
+            'paid'      => 'Payée',
+            'delivered' => 'Livrée',
+            'cancelled' => 'Annulée',
+        ];
+
+        return response()->json([
+            'status' => $order->status,
+            'label'  => $labels[$order->status] ?? $order->status,
+        ]);
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([

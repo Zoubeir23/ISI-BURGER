@@ -48,6 +48,7 @@ $statusConfig = [
                     <th class="px-6 py-3.5 text-[10px] font-bold uppercase tracking-widest" style="color: var(--admin-text-muted);">#</th>
                     <th class="px-6 py-3.5 text-[10px] font-bold uppercase tracking-widest" style="color: var(--admin-text-muted);">Client</th>
                     <th class="px-6 py-3.5 text-[10px] font-bold uppercase tracking-widest" style="color: var(--admin-text-muted);">Téléphone</th>
+                    <th class="px-6 py-3.5 text-[10px] font-bold uppercase tracking-widest" style="color: var(--admin-text-muted);">Email</th>
                     <th class="px-6 py-3.5 text-[10px] font-bold uppercase tracking-widest" style="color: var(--admin-text-muted);">Montant</th>
                     <th class="px-6 py-3.5 text-[10px] font-bold uppercase tracking-widest" style="color: var(--admin-text-muted);">Statut</th>
                     <th class="px-6 py-3.5 text-[10px] font-bold uppercase tracking-widest" style="color: var(--admin-text-muted);">Date</th>
@@ -65,7 +66,7 @@ $statusConfig = [
                     </td>
                     <td class="px-6 py-4">
                         <div class="flex items-center gap-2.5">
-                            <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold text-white {{ $order->is_archived ? 'opacity-40' : '' }}" style="background: linear-gradient(135deg, #ff6b35, #e55a26);">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold text-white {{ $order->is_archived ? 'opacity-40' : '' }}" style="background: linear-gradient(135deg, #e53e3e, #c53030);">
                                 {{ strtoupper(substr($order->client_name, 0, 1)) }}
                             </div>
                             <span class="text-sm font-semibold" style="color: var(--admin-text);">{{ $order->client_name }}</span>
@@ -73,6 +74,13 @@ $statusConfig = [
                     </td>
                     <td class="px-6 py-4">
                         <span class="text-sm" style="color: var(--admin-text-muted);">{{ $order->client_phone }}</span>
+                    </td>
+                    <td class="px-6 py-4">
+                        @if($order->client_email)
+                            <span class="text-xs" style="color: var(--admin-text-muted);">{{ $order->client_email }}</span>
+                        @else
+                            <span class="text-xs" style="color: var(--admin-text-dim);">—</span>
+                        @endif
                     </td>
                     <td class="px-6 py-4">
                         <span class="text-sm font-bold" style="color: var(--admin-text); font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 900; letter-spacing:-0.01em;">
@@ -120,9 +128,9 @@ $statusConfig = [
                             @else
                                 <a href="{{ route('admin.orders.show', $order) }}"
                                    class="inline-flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-lg transition-all"
-                                   style="background: rgba(255,107,53,0.1); color: #ff6b35;"
-                                   onmouseover="this.style.background='#ff6b35';this.style.color='white';"
-                                   onmouseout="this.style.background='rgba(255,107,53,0.1)';this.style.color='#ff6b35';">
+                                   style="background: rgba(229,62,62,0.1); color: #e53e3e;"
+                                   onmouseover="this.style.background='#e53e3e';this.style.color='white';"
+                                   onmouseout="this.style.background='rgba(229,62,62,0.1)';this.style.color='#e53e3e';">
                                     <span class="material-symbols-outlined text-[14px]">visibility</span>
                                     Voir
                                 </a>
@@ -132,7 +140,7 @@ $statusConfig = [
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="7" class="px-6 py-16 text-center">
+                    <td colspan="8" class="px-6 py-16 text-center">
                         <div class="flex flex-col items-center gap-3">
                             <span class="material-symbols-outlined text-5xl" style="color: var(--admin-text-dim);">{{ $filter === 'archived' ? 'archive' : 'inbox' }}</span>
                             <p class="font-semibold" style="color: var(--admin-text-muted);">{{ $filter === 'archived' ? 'Aucune commande archivée' : 'Aucune commande pour l\'instant' }}</p>
@@ -144,9 +152,45 @@ $statusConfig = [
         </table>
     </div>
 
+    {{-- Voir plus / pagination --}}
     @if($orders->hasPages())
-    <div class="px-6 py-4 border-t" style="border-color: var(--admin-card-border, #e5e7eb);">
-        {{ $orders->links() }}
+    <div class="px-6 py-4 border-t flex flex-col items-center gap-3" style="border-color: var(--admin-card-border, #e5e7eb);">
+
+        {{-- Barre de progression --}}
+        @php $progress = round($orders->lastItem() / $orders->total() * 100); @endphp
+        <div class="w-full max-w-sm flex flex-col items-center gap-1.5">
+            <div class="w-full rounded-full overflow-hidden" style="height:4px; background: var(--admin-border, #e5e7eb);">
+                <div class="h-full rounded-full transition-all duration-500"
+                     style="width: {{ $progress }}%; background: linear-gradient(90deg, #e53e3e, #c53030);"></div>
+            </div>
+            <span class="text-xs font-semibold" style="color: var(--admin-text-muted, #6b7280);">
+                {{ $orders->lastItem() }} / {{ $orders->total() }} commandes affichées
+            </span>
+        </div>
+
+        {{-- Bouton Voir plus --}}
+        @if($orders->hasMorePages())
+        <a href="{{ $orders->nextPageUrl() }}"
+           class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold transition-all"
+           style="background: rgba(229,62,62,0.08); color: #e53e3e; border: 1.5px solid rgba(229,62,62,0.2);"
+           onmouseover="this.style.background='rgba(229,62,62,0.15)'; this.style.borderColor='rgba(229,62,62,0.4)';"
+           onmouseout="this.style.background='rgba(229,62,62,0.08)'; this.style.borderColor='rgba(229,62,62,0.2)';">
+            <span class="material-symbols-outlined text-base">expand_more</span>
+            Voir plus
+            <span class="text-xs opacity-60">({{ $orders->total() - $orders->lastItem() }} restante{{ $orders->total() - $orders->lastItem() > 1 ? 's' : '' }})</span>
+        </a>
+        @endif
+
+        {{-- Navigation précédent (si pas page 1) --}}
+        @if($orders->currentPage() > 1)
+        <a href="{{ $orders->previousPageUrl() }}"
+           class="inline-flex items-center gap-1.5 text-xs font-semibold"
+           style="color: var(--admin-text-muted, #6b7280);"
+           onmouseover="this.style.color='#e53e3e'" onmouseout="this.style.color='var(--admin-text-muted, #6b7280)'">
+            <span class="material-symbols-outlined text-sm">arrow_back</span>
+            Page précédente
+        </a>
+        @endif
     </div>
     @endif
 </div>

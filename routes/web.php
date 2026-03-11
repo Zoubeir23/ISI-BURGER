@@ -14,6 +14,7 @@ Route::get('/', [KioskController::class, 'index'])->name('kiosk.index');
 Route::post('/order', [KioskController::class, 'store'])->name('kiosk.order.store');
 Route::get('/checkout', [KioskController::class, 'checkout'])->name('kiosk.checkout');
 Route::get('/confirmation', [KioskController::class, 'confirmation'])->name('kiosk.confirmation');
+Route::get('/order/{id}/status', [KioskController::class, 'orderStatus'])->name('kiosk.order.status');
 
 
 Route::prefix('admin')->name('admin.')->group(function () {

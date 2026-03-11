@@ -4,7 +4,7 @@
 
 @section('content')
 {{-- Onglets Actifs / Archivés --}}
-<div class="flex items-center gap-2 mb-6 border-b border-gray-200 pb-3">
+<div class="flex items-center gap-2 mb-6 border-b pb-3" style="border-color: var(--admin-border, #e5e7eb);">
     <a href="{{ route('admin.burgers.index', ['filter' => 'active']) }}"
         class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition
         {{ $filter === 'active' ? 'bg-primary text-white shadow' : 'text-gray-500 hover:bg-gray-100' }}">
@@ -54,7 +54,7 @@
             <p class="text-primary font-bold text-base">{{ number_format($burger->price, 0, ',', ' ') }} FCFA</p>
             <p class="text-gray-400 text-sm mt-1 mb-4 line-clamp-2">{{ $burger->description ?: 'Aucune description.' }}</p>
             <div class="mt-auto flex justify-between items-center">
-                <span class="text-sm font-semibold {{ $burger->stock_quantity > 10 ? 'text-green-600' : ($burger->stock_quantity > 0 ? 'text-orange-500' : 'text-red-500') }}">
+                <span class="text-sm font-semibold {{ $burger->stock_quantity >= 10 ? 'text-green-600' : ($burger->stock_quantity > 0 ? 'text-orange-500' : 'text-red-500') }}">
                     Stock : {{ $burger->stock_quantity }}
                 </span>
                 <div class="flex items-center gap-2">
@@ -101,9 +101,47 @@
     @endforelse
 </div>
 
-<div class="mt-6">
-    {{ $burgers->links() }}
+{{-- Voir plus / pagination --}}
+@if($burgers->hasPages())
+<div class="mt-6 flex flex-col items-center gap-3">
+
+    {{-- Barre de progression --}}
+    @php $progress = round($burgers->lastItem() / $burgers->total() * 100); @endphp
+    <div class="w-full max-w-sm flex flex-col items-center gap-1.5">
+        <div class="w-full rounded-full overflow-hidden" style="height:4px; background: var(--admin-border, #e5e7eb);">
+            <div class="h-full rounded-full transition-all duration-500"
+                 style="width: {{ $progress }}%; background: linear-gradient(90deg, #e53e3e, #c53030);"></div>
+        </div>
+        <span class="text-xs font-semibold" style="color: var(--admin-text-muted, #6b7280);">
+            {{ $burgers->lastItem() }} / {{ $burgers->total() }} burger{{ $burgers->total() > 1 ? 's' : '' }} affichés
+        </span>
+    </div>
+
+    {{-- Bouton Voir plus --}}
+    @if($burgers->hasMorePages())
+    <a href="{{ $burgers->nextPageUrl() }}"
+       class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold transition-all"
+       style="background: rgba(229,62,62,0.08); color: #e53e3e; border: 1.5px solid rgba(229,62,62,0.2);"
+       onmouseover="this.style.background='rgba(229,62,62,0.15)'; this.style.borderColor='rgba(229,62,62,0.4)';"
+       onmouseout="this.style.background='rgba(229,62,62,0.08)'; this.style.borderColor='rgba(229,62,62,0.2)';">
+        <span class="material-symbols-outlined text-base">expand_more</span>
+        Voir plus
+        <span class="text-xs opacity-60">({{ $burgers->total() - $burgers->lastItem() }} restant{{ $burgers->total() - $burgers->lastItem() > 1 ? 's' : '' }})</span>
+    </a>
+    @endif
+
+    {{-- Navigation précédent --}}
+    @if($burgers->currentPage() > 1)
+    <a href="{{ $burgers->previousPageUrl() }}"
+       class="inline-flex items-center gap-1.5 text-xs font-semibold"
+       style="color: var(--admin-text-muted, #6b7280);"
+       onmouseover="this.style.color='#e53e3e'" onmouseout="this.style.color='var(--admin-text-muted, #6b7280)'">
+        <span class="material-symbols-outlined text-sm">arrow_back</span>
+        Page précédente
+    </a>
+    @endif
 </div>
+@endif
 
 {{-- Modale confirmation suppression définitive --}}
 <div id="delete-modal"
